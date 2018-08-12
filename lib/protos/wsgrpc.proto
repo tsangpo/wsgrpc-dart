@@ -1,0 +1,37 @@
+
+syntax = "proto3";
+
+package wsgrpc;
+
+
+message DataFrame {
+    message Headers {
+        string path = 1;
+        string status = 2;
+        string rpc_status = 3;
+        string rpc_message = 4;
+    }
+    message Trailers {
+        string path = 1;
+        string status = 2;
+        string rpc_status = 3;
+        string rpc_message = 4;
+    }
+    enum Types {
+        NOOP = 0;
+        HEADERS = 1;
+        TRAILERS = 2;
+        MESSAGE = 3;
+    }
+
+    int32 stream_id = 1;
+    bool end_stream = 2;
+    Types type = 3;
+    Headers headers = 4;
+    Trailers trailers = 5;
+    bytes message = 6;
+}
+
+message Endponit {
+    string url = 1;
+}
