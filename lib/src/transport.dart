@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -63,8 +64,12 @@ class WSTransportConnection {
   _feedHeaderMessage(WSCallStream stream, DataFrame frame) {
     var headers = new List<Header>();
     headers.add(Header.ascii(':status', frame.headers.status));
+    //headers.add(Header.ascii('content-type', 'application/grpc'));
     headers.add(Header.ascii('grpc-status', frame.headers.rpcStatus));
-    headers.add(Header.ascii('grpc-message', frame.headers.rpcMessage));
+    headers.add(Header(ascii.encode('grpc-message'),
+        ascii.encode(Uri.encodeComponent(frame.headers.rpcMessage))));
+    //headers.add(Header(
+    //    ascii.encode('grpc-message'), utf8.encode(frame.headers.rpcMessage)));
     var msg = new HeadersStreamMessage(headers, endStream: frame.endStream);
     stream.incomingC.add(msg);
   }
