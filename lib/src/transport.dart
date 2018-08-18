@@ -117,14 +117,6 @@ class WSTransportConnection {
     _ws.add(data);
   }
 
-  sendHeaders(int streamID, String path, [String status]) {
-    this.send(new DataFrame()
-      ..streamId = streamID
-      ..type = DataFrame_Types.HEADERS
-      ..headers = (new DataFrame_Headers()..path = path)
-      ..endStream = false);
-  }
-
   sendMessage(int streamID, Uint8List message) {
     this.send(new DataFrame()
       ..streamId = streamID
@@ -133,6 +125,23 @@ class WSTransportConnection {
       ..endStream = false);
   }
 
+  sendStreamEnd(int streamID) {
+    this.send(new DataFrame()
+      ..streamId = streamID
+      ..type = DataFrame_Types.MESSAGE
+      ..endStream = true);
+  }
+
+  // for server
+  sendHeaders(int streamID, String path, [String status]) {
+    this.send(new DataFrame()
+      ..streamId = streamID
+      ..type = DataFrame_Types.HEADERS
+      ..headers = (new DataFrame_Headers()..path = path)
+      ..endStream = false);
+  }
+
+  // for server
   sendTrailers(
       int streamID, String status, String rpcStatus, String rpcMessage) {
     this.send(new DataFrame()
@@ -142,13 +151,6 @@ class WSTransportConnection {
         ..status = status
         ..rpcStatus = rpcStatus
         ..rpcMessage = rpcMessage)
-      ..endStream = true);
-  }
-
-  sendStreamEnd(int streamID) {
-    this.send(new DataFrame()
-      ..streamId = streamID
-      ..type = DataFrame_Types.MESSAGE
       ..endStream = true);
   }
 

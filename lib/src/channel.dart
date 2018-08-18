@@ -10,7 +10,7 @@ import './connection.dart';
 /// RPCs on the same channel may be sent to different connections, depending on
 /// load balancing settings.
 class WSClientChannel implements ClientChannel {
-  final String endpoint;
+  String endpoint;
 
   // TODO(jakobr): Multiple connections, load balancing.
   ClientConnection _connection;
@@ -18,6 +18,12 @@ class WSClientChannel implements ClientChannel {
   bool _isShutdown = false;
 
   WSClientChannel(this.endpoint);
+
+  reset(String endpoint) {
+    this.endpoint = endpoint;
+    _connection?.terminate();
+    _connection = null;
+  }
 
   /// Shuts down this channel.
   ///
