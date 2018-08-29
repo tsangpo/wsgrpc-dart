@@ -23,7 +23,6 @@ class WSTransportConnection {
   }
 
   void _onData(dynamic data) {
-    print("ondata: ${data}");
     if (data == "ping") {
       _ws.add("pong");
       return;
@@ -70,6 +69,11 @@ class WSTransportConnection {
         ascii.encode(Uri.encodeComponent(frame.headers.rpcMessage))));
     //headers.add(Header(
     //    ascii.encode('grpc-message'), utf8.encode(frame.headers.rpcMessage)));
+    if (frame.headers.rpcStatus != "0" &&
+        frame.headers.rpcMessage != null &&
+        frame.headers.rpcMessage != "") {
+      print("grpc error: ${frame.headers.rpcMessage}");
+    }
     var msg = new HeadersStreamMessage(headers, endStream: frame.endStream);
     stream.incomingC.add(msg);
   }

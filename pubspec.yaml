@@ -14,4 +14,5 @@ dependencies:
   protobuf: ^0.9.1
 
 dev_dependencies:
-  ? test
+  flutter_test:
+    sdk: flutter
