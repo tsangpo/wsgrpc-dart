@@ -5,13 +5,12 @@ author: tsangpo <tsangpozheng@gmail.com>
 homepage: https://github.com/tsangpozheng
 
 environment:
-  sdk: ">=1.8.0 <=2.1.0"
+  sdk: ">=2.0.0-dev.68.0 <3.0.0"
 
 dependencies:
   http2: ^0.1.8+2
   grpc: ^0.6.4
-  protobuf: ^0.10.2
+  protobuf: ^0.10.4
 
 dev_dependencies:
-  flutter_test:
-    sdk: flutter
+  test: ^1.5.1
