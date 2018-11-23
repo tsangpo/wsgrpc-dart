@@ -19,7 +19,7 @@ class WSTransportConnection {
   }
 
   WSTransportConnection(this._ws, [this._nextStreamID = 1]) {
-    _ws.listen(_onData, onDone: _onClose);
+    _ws.listen(_onData, onDone: _onClose, onError: _onError);
   }
 
   void _onData(dynamic data) {
@@ -58,6 +58,11 @@ class WSTransportConnection {
       stream.terminate();
     });
     _openStreams.clear();
+  }
+
+  void _onError(dynamic error) {
+    print('ws.onError $error');
+    _onClose();
   }
 
   _feedHeaderMessage(WSCallStream stream, DataFrame frame) {
@@ -162,11 +167,13 @@ class WSTransportConnection {
 
   Future finish() {
     //TODO: handle openingStream
+    print("wsgrpc.transport.finish");
     return _ws.close();
   }
 
   Future terminate() {
     //TODO: handle openingStream
+    print("wsgrpc.transport.terminate");
     return _ws.close();
   }
 }

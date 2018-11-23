@@ -8,10 +8,9 @@ environment:
   sdk: ">=1.8.0 <=2.1.0"
 
 dependencies:
-  ? convert
   http2: ^0.1.8+2
-  grpc: ^0.6.1
-  protobuf: ^0.9.1
+  grpc: ^0.6.4
+  protobuf: ^0.10.2
 
 dev_dependencies:
   flutter_test:

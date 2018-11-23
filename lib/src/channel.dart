@@ -19,8 +19,10 @@ class WSClientChannel implements ClientChannel {
 
   WSClientChannel(this.endpoint);
 
-  reset(String endpoint) {
-    this.endpoint = endpoint;
+  reset([String endpoint]) {
+    if (endpoint != null) {
+      this.endpoint = endpoint;
+    }
     _connection?.terminate();
     _connection = null;
   }

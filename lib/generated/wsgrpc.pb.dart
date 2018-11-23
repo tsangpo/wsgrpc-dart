@@ -1,19 +1,20 @@
 ///
 //  Generated code. Do not modify.
+//  source: wsgrpc.proto
 ///
-// ignore_for_file: non_constant_identifier_names,library_prefixes
+// ignore_for_file: non_constant_identifier_names,library_prefixes,unused_import
 
 // ignore: UNUSED_SHOWN_NAME
 import 'dart:core' show int, bool, double, String, List, override;
 
-import 'package:protobuf/protobuf.dart';
+import 'package:protobuf/protobuf.dart' as $pb;
 
 import 'wsgrpc.pbenum.dart';
 
 export 'wsgrpc.pbenum.dart';
 
-class DataFrame_Headers extends GeneratedMessage {
-  static final BuilderInfo _i = new BuilderInfo('DataFrame_Headers')
+class DataFrame_Headers extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('DataFrame.Headers', package: const $pb.PackageName('wsgrpc'))
     ..aOS(1, 'path')
     ..aOS(2, 'status')
     ..aOS(3, 'rpcStatus')
@@ -22,19 +23,17 @@ class DataFrame_Headers extends GeneratedMessage {
   ;
 
   DataFrame_Headers() : super();
-  DataFrame_Headers.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
-  DataFrame_Headers.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  DataFrame_Headers.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  DataFrame_Headers.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   DataFrame_Headers clone() => new DataFrame_Headers()..mergeFromMessage(this);
-  BuilderInfo get info_ => _i;
+  DataFrame_Headers copyWith(void Function(DataFrame_Headers) updates) => super.copyWith((message) => updates(message as DataFrame_Headers));
+  $pb.BuilderInfo get info_ => _i;
   static DataFrame_Headers create() => new DataFrame_Headers();
-  static PbList<DataFrame_Headers> createRepeated() => new PbList<DataFrame_Headers>();
-  static DataFrame_Headers getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyDataFrame_Headers();
-    return _defaultInstance;
-  }
+  static $pb.PbList<DataFrame_Headers> createRepeated() => new $pb.PbList<DataFrame_Headers>();
+  static DataFrame_Headers getDefault() => _defaultInstance ??= create()..freeze();
   static DataFrame_Headers _defaultInstance;
   static void $checkItem(DataFrame_Headers v) {
-    if (v is! DataFrame_Headers) checkItemFailed(v, 'DataFrame_Headers');
+    if (v is! DataFrame_Headers) $pb.checkItemFailed(v, _i.messageName);
   }
 
   String get path => $_getS(0, '');
@@ -58,10 +57,8 @@ class DataFrame_Headers extends GeneratedMessage {
   void clearRpcMessage() => clearField(4);
 }
 
-class _ReadonlyDataFrame_Headers extends DataFrame_Headers with ReadonlyMessageMixin {}
-
-class DataFrame_Trailers extends GeneratedMessage {
-  static final BuilderInfo _i = new BuilderInfo('DataFrame_Trailers')
+class DataFrame_Trailers extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('DataFrame.Trailers', package: const $pb.PackageName('wsgrpc'))
     ..aOS(1, 'path')
     ..aOS(2, 'status')
     ..aOS(3, 'rpcStatus')
@@ -70,19 +67,17 @@ class DataFrame_Trailers extends GeneratedMessage {
   ;
 
   DataFrame_Trailers() : super();
-  DataFrame_Trailers.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
-  DataFrame_Trailers.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  DataFrame_Trailers.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  DataFrame_Trailers.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   DataFrame_Trailers clone() => new DataFrame_Trailers()..mergeFromMessage(this);
-  BuilderInfo get info_ => _i;
+  DataFrame_Trailers copyWith(void Function(DataFrame_Trailers) updates) => super.copyWith((message) => updates(message as DataFrame_Trailers));
+  $pb.BuilderInfo get info_ => _i;
   static DataFrame_Trailers create() => new DataFrame_Trailers();
-  static PbList<DataFrame_Trailers> createRepeated() => new PbList<DataFrame_Trailers>();
-  static DataFrame_Trailers getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyDataFrame_Trailers();
-    return _defaultInstance;
-  }
+  static $pb.PbList<DataFrame_Trailers> createRepeated() => new $pb.PbList<DataFrame_Trailers>();
+  static DataFrame_Trailers getDefault() => _defaultInstance ??= create()..freeze();
   static DataFrame_Trailers _defaultInstance;
   static void $checkItem(DataFrame_Trailers v) {
-    if (v is! DataFrame_Trailers) checkItemFailed(v, 'DataFrame_Trailers');
+    if (v is! DataFrame_Trailers) $pb.checkItemFailed(v, _i.messageName);
   }
 
   String get path => $_getS(0, '');
@@ -106,33 +101,29 @@ class DataFrame_Trailers extends GeneratedMessage {
   void clearRpcMessage() => clearField(4);
 }
 
-class _ReadonlyDataFrame_Trailers extends DataFrame_Trailers with ReadonlyMessageMixin {}
-
-class DataFrame extends GeneratedMessage {
-  static final BuilderInfo _i = new BuilderInfo('DataFrame')
-    ..a<int>(1, 'streamId', PbFieldType.O3)
+class DataFrame extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('DataFrame', package: const $pb.PackageName('wsgrpc'))
+    ..a<int>(1, 'streamId', $pb.PbFieldType.O3)
     ..aOB(2, 'endStream')
-    ..e<DataFrame_Types>(3, 'type', PbFieldType.OE, DataFrame_Types.NOOP, DataFrame_Types.valueOf, DataFrame_Types.values)
-    ..a<DataFrame_Headers>(4, 'headers', PbFieldType.OM, DataFrame_Headers.getDefault, DataFrame_Headers.create)
-    ..a<DataFrame_Trailers>(5, 'trailers', PbFieldType.OM, DataFrame_Trailers.getDefault, DataFrame_Trailers.create)
-    ..a<List<int>>(6, 'message', PbFieldType.OY)
+    ..e<DataFrame_Types>(3, 'type', $pb.PbFieldType.OE, DataFrame_Types.NOOP, DataFrame_Types.valueOf, DataFrame_Types.values)
+    ..a<DataFrame_Headers>(4, 'headers', $pb.PbFieldType.OM, DataFrame_Headers.getDefault, DataFrame_Headers.create)
+    ..a<DataFrame_Trailers>(5, 'trailers', $pb.PbFieldType.OM, DataFrame_Trailers.getDefault, DataFrame_Trailers.create)
+    ..a<List<int>>(6, 'message', $pb.PbFieldType.OY)
     ..hasRequiredFields = false
   ;
 
   DataFrame() : super();
-  DataFrame.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
-  DataFrame.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  DataFrame.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  DataFrame.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   DataFrame clone() => new DataFrame()..mergeFromMessage(this);
-  BuilderInfo get info_ => _i;
+  DataFrame copyWith(void Function(DataFrame) updates) => super.copyWith((message) => updates(message as DataFrame));
+  $pb.BuilderInfo get info_ => _i;
   static DataFrame create() => new DataFrame();
-  static PbList<DataFrame> createRepeated() => new PbList<DataFrame>();
-  static DataFrame getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyDataFrame();
-    return _defaultInstance;
-  }
+  static $pb.PbList<DataFrame> createRepeated() => new $pb.PbList<DataFrame>();
+  static DataFrame getDefault() => _defaultInstance ??= create()..freeze();
   static DataFrame _defaultInstance;
   static void $checkItem(DataFrame v) {
-    if (v is! DataFrame) checkItemFailed(v, 'DataFrame');
+    if (v is! DataFrame) $pb.checkItemFailed(v, _i.messageName);
   }
 
   int get streamId => $_get(0, 0);
@@ -166,28 +157,24 @@ class DataFrame extends GeneratedMessage {
   void clearMessage() => clearField(6);
 }
 
-class _ReadonlyDataFrame extends DataFrame with ReadonlyMessageMixin {}
-
-class Endponit extends GeneratedMessage {
-  static final BuilderInfo _i = new BuilderInfo('Endponit')
+class Endponit extends $pb.GeneratedMessage {
+  static final $pb.BuilderInfo _i = new $pb.BuilderInfo('Endponit', package: const $pb.PackageName('wsgrpc'))
     ..aOS(1, 'url')
     ..hasRequiredFields = false
   ;
 
   Endponit() : super();
-  Endponit.fromBuffer(List<int> i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
-  Endponit.fromJson(String i, [ExtensionRegistry r = ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  Endponit.fromBuffer(List<int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
+  Endponit.fromJson(String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
   Endponit clone() => new Endponit()..mergeFromMessage(this);
-  BuilderInfo get info_ => _i;
+  Endponit copyWith(void Function(Endponit) updates) => super.copyWith((message) => updates(message as Endponit));
+  $pb.BuilderInfo get info_ => _i;
   static Endponit create() => new Endponit();
-  static PbList<Endponit> createRepeated() => new PbList<Endponit>();
-  static Endponit getDefault() {
-    if (_defaultInstance == null) _defaultInstance = new _ReadonlyEndponit();
-    return _defaultInstance;
-  }
+  static $pb.PbList<Endponit> createRepeated() => new $pb.PbList<Endponit>();
+  static Endponit getDefault() => _defaultInstance ??= create()..freeze();
   static Endponit _defaultInstance;
   static void $checkItem(Endponit v) {
-    if (v is! Endponit) checkItemFailed(v, 'Endponit');
+    if (v is! Endponit) $pb.checkItemFailed(v, _i.messageName);
   }
 
   String get url => $_getS(0, '');
@@ -195,6 +182,4 @@ class Endponit extends GeneratedMessage {
   bool hasUrl() => $_has(0);
   void clearUrl() => clearField(1);
 }
-
-class _ReadonlyEndponit extends Endponit with ReadonlyMessageMixin {}
 
