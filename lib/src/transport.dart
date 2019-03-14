@@ -54,6 +54,7 @@ class WSTransportConnection {
   }
 
   void _onClose() {
+    print('ws._onClose');
     _openStreams.values.toList().forEach((stream) {
       stream.terminate();
     });
@@ -61,7 +62,7 @@ class WSTransportConnection {
   }
 
   void _onError(dynamic error) {
-    print('ws.onError $error');
+    print('ws._onError $error');
     _onClose();
   }
 
