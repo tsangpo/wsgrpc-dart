@@ -12,6 +12,7 @@ class WSTransportConnection {
   WebSocket _ws;
   int _nextStreamID;
   final Map<int, WSCallStream> _openStreams = {};
+  DateTime lastSeenTime;
 
   static Future<WSTransportConnection> connect(String endpoint) async {
     var ws = await WebSocket.connect(endpoint);
@@ -19,10 +20,12 @@ class WSTransportConnection {
   }
 
   WSTransportConnection(this._ws, [this._nextStreamID = 1]) {
+    lastSeenTime = DateTime.now();
     _ws.listen(_onData, onDone: _onClose, onError: _onError);
   }
 
   void _onData(dynamic data) {
+    lastSeenTime = DateTime.now();
     if (data == "ping") {
       _ws.add("pong");
       return;
@@ -164,7 +167,14 @@ class WSTransportConnection {
       ..endStream = true);
   }
 
-  bool get isOpen => _ws.readyState == WebSocket.OPEN;
+  bool get isOpen {
+    // close stale connection
+    if (DateTime.now().difference(lastSeenTime) > Duration(seconds: 30)) {
+      _ws.close();
+      return false;
+    }
+    return _ws.readyState == WebSocket.OPEN;
+  }
 
   Future finish() {
     //TODO: handle openingStream
