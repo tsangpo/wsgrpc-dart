@@ -16,6 +16,11 @@ class WSClientChannel implements ClientChannel {
   ClientConnection _connection;
 
   bool _isShutdown = false;
+  StreamController<String> _callEvents = new StreamController();
+  StreamController<dynamic> _callErrors = new StreamController();
+
+  Stream<String> get callEvents => _callEvents.stream;
+  Stream<dynamic> get callErrors => _callErrors.stream;
 
   WSClientChannel(this.endpoint);
 
@@ -61,7 +66,11 @@ class WSClientChannel implements ClientChannel {
     getConnection().then((connection) {
       if (call.isCancelled) return;
       connection.dispatchCall(call);
-    }, onError: call.onConnectionError);
+      _callEvents.add(call.path);
+    }, onError: (err) {
+      call.onConnectionError(err);
+      _callErrors.add(err);
+    });
     return call;
   }
 
