@@ -2,15 +2,15 @@ name: wsgrpc
 description: A new flutter package project.
 version: 0.0.1
 author: tsangpo <tsangpozheng@gmail.com>
-homepage: https://github.com/tsangpozheng
+homepage: https://github.com/tsangpo
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
-  http2: ^0.1.8+2
-  grpc: ^0.6.4
-  protobuf: ^0.10.4
+  http2: ^1.0.0
+  grpc: ^1.0.2
+  protobuf: ^0.13.11
 
 dev_dependencies:
   test: ^1.5.1

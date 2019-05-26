@@ -21,6 +21,7 @@ class WSTransportConnection {
 
   WSTransportConnection(this._ws, [this._nextStreamID = 1]) {
     lastSeenTime = DateTime.now();
+    _ws.pingInterval = Duration(seconds: 10);
     _ws.listen(_onData, onDone: _onClose, onError: _onError);
   }
 
@@ -57,7 +58,10 @@ class WSTransportConnection {
   }
 
   void _onClose() {
-    print('ws._onClose');
+    print('1ws._onClose');
+    print('2ws._onClose');
+    print('3ws._onClose');
+    print('4ws._onClose');
     _openStreams.values.toList().forEach((stream) {
       stream.terminate();
     });
@@ -65,7 +69,10 @@ class WSTransportConnection {
   }
 
   void _onError(dynamic error) {
-    print('ws._onError $error');
+    print('1ws._onError $error');
+    print('2ws._onError $error');
+    print('3ws._onError $error');
+    print('4ws._onError $error');
     _onClose();
   }
 
@@ -101,8 +108,8 @@ class WSTransportConnection {
 
   ClientTransportStream makeRequest(String path) {
     var streamID = this._nextStreamID;
-    this.sendHeaders(streamID, path);
     this._nextStreamID += 2;
+    this.sendHeaders(streamID, path);
     var stream = new WSCallStream(streamID);
     this._openStreams[streamID] = stream;
 
@@ -169,11 +176,12 @@ class WSTransportConnection {
 
   bool get isOpen {
     // close stale connection
-    if (DateTime.now().difference(lastSeenTime) > Duration(seconds: 30)) {
+    // print("ws.isOpen: ${_ws.readyState}, ${lastSeenTime}");
+    if (DateTime.now().difference(lastSeenTime) > Duration(seconds: 10)) {
       _ws.close();
       return false;
     }
-    return _ws.readyState == WebSocket.OPEN;
+    return _ws.readyState == WebSocket.open;
   }
 
   Future finish() {
