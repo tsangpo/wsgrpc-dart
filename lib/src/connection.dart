@@ -47,14 +47,25 @@ class WSClientConnection extends ClientConnection {
                 credentials: const ChannelCredentials.insecure()));
 
   Future ensureConnect() async {
-    if (_transportFuture != null) {
-      await _transportFuture;
+    var _theFuture = _transportFuture;
+
+    if (_theFuture == null || (transport != null && !transport.isOpen)) {
+      _theFuture = _connectTransport();
+      _transportFuture = _theFuture;
+    }
+
+    try {
+      await _theFuture;
       if (transport.isOpen) {
         return;
       }
+    } catch (e) {
+      // 失败的了，下次不要用
+      if (_transportFuture == _theFuture) {
+        _transportFuture = null;
+      }
+      throw e;
     }
-    _transportFuture = _connectTransport();
-    await _transportFuture;
   }
 
   Future<WSTransportConnection> _connectTransport() async {
