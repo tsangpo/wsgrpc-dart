@@ -1,25 +1,29 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:http2/transport.dart';
+import 'package:grpc/grpc.dart';
+import 'package:grpc/src/client/transport/transport.dart';
 
-import '../generated/wsgrpc.pb.dart';
-import './stream.dart';
+import '../../generated/wsgrpc.pb.dart';
+import 'ws_stream.dart';
 
-class WSTransportConnection {
+typedef void ActiveStateChangedCallback(bool isActive);
+
+class WebsocketTransport {
   WebSocket _ws;
   int _nextStreamID;
-  final Map<int, WSCallStream> _openStreams = {};
+  final Map<int, WebsocketTransportStream> _openStreams = {};
   DateTime lastSeenTime;
+  Function onDone;
+  ActiveStateChangedCallback onActiveStateChanged;
 
-  static Future<WSTransportConnection> connect(String endpoint) async {
+  static Future<WebsocketTransport> connect(String endpoint) async {
     var ws = await WebSocket.connect(endpoint);
-    return new WSTransportConnection(ws);
+    return new WebsocketTransport(ws);
   }
 
-  WSTransportConnection(this._ws, [this._nextStreamID = 1]) {
+  WebsocketTransport(this._ws, [this._nextStreamID = 1]) {
     lastSeenTime = DateTime.now();
     _ws.pingInterval = Duration(seconds: 10);
     _ws.listen(_onData, onDone: _onClose, onError: _onError);
@@ -33,12 +37,14 @@ class WSTransportConnection {
     } else if (data == "pong") {
       return;
     }
+
     var frame = DataFrame.fromBuffer(data);
     var streamID = frame.streamId;
     if (!_openStreams.containsKey(streamID)) {
       //TODO: log unkown stream
       return;
     }
+
     var stream = _openStreams[streamID];
     switch (frame.type) {
       case DataFrame_Types.MESSAGE:
@@ -52,8 +58,11 @@ class WSTransportConnection {
         break;
     }
     if (frame.endStream) {
-      stream.incomingC.close();
+      stream.incomingMessagesSink.close();
       _openStreams.remove(streamID);
+    }
+    if (onActiveStateChanged != null) {
+      onActiveStateChanged(_openStreams.length > 0);
     }
   }
 
@@ -63,9 +72,12 @@ class WSTransportConnection {
     print('3ws._onClose');
     print('4ws._onClose');
     _openStreams.values.toList().forEach((stream) {
-      stream.terminate();
+      stream.incomingMessagesSink.close();
     });
     _openStreams.clear();
+    if (onDone != null) {
+      onDone();
+    }
   }
 
   void _onError(dynamic error) {
@@ -73,52 +85,41 @@ class WSTransportConnection {
     print('2ws._onError $error');
     print('3ws._onError $error');
     print('4ws._onError $error');
-    _onClose();
   }
 
-  _feedHeaderMessage(WSCallStream stream, DataFrame frame) {
-    var headers = new List<Header>();
-    headers.add(Header.ascii(':status', frame.headers.status));
-    //headers.add(Header.ascii('content-type', 'application/grpc'));
-    headers.add(Header.ascii('grpc-status', frame.headers.rpcStatus));
-    headers.add(Header(ascii.encode('grpc-message'),
-        ascii.encode(Uri.encodeComponent(frame.headers.rpcMessage))));
-    //headers.add(Header(
-    //    ascii.encode('grpc-message'), utf8.encode(frame.headers.rpcMessage)));
+  _feedHeaderMessage(WebsocketTransportStream stream, DataFrame frame) {
+    var metadata = new Map<String, String>();
+    metadata[':status'] = frame.headers.status;
+    metadata['grpc-status'] = frame.headers.rpcStatus;
+    metadata['grpc-message'] = frame.headers.rpcMessage;
     if (frame.headers.rpcStatus != "0" &&
         frame.headers.rpcMessage != null &&
         frame.headers.rpcMessage != "") {
       print("grpc error: ${frame.headers.rpcMessage}");
     }
-    var msg = new HeadersStreamMessage(headers, endStream: frame.endStream);
-    stream.incomingC.add(msg);
+    stream.incomingMessagesSink.add(new GrpcMetadata(metadata));
   }
 
-  _feedDataMessage(WSCallStream stream, DataFrame frame) {
+  _feedDataMessage(WebsocketTransportStream stream, DataFrame frame) {
     var data = frame.message;
     if (data != null) {
-      var bin = new Uint8List(5 + data.length);
-      var headview = new ByteData.view(bin.buffer);
-      headview.setInt32(1, data.length);
-      bin.setAll(5, data);
-      var msg = new DataStreamMessage(bin, endStream: frame.endStream);
-      stream.incomingC.add(msg);
+      stream.incomingMessagesSink.add(new GrpcData(data));
     }
   }
 
-  ClientTransportStream makeRequest(String path) {
+  WebsocketTransportStream makeRequest(
+      String path, ErrorHandler onRequestFailure) {
     var streamID = this._nextStreamID;
     this._nextStreamID += 2;
     this.sendHeaders(streamID, path);
-    var stream = new WSCallStream(streamID);
+    var stream = new WebsocketTransportStream(() {
+      terminateStream(streamID);
+    });
     this._openStreams[streamID] = stream;
 
-    stream.outgoingC.stream.listen((msg) {
-      // DataStreamMessage
-      if (msg is DataStreamMessage) {
-        sendMessage(streamID, msg.bytes.sublist(5));
-      }
-      // client stream not send headers and trailers
+    stream.outgoingMessagesStream.handleError(onRequestFailure).listen((data) {
+      // send data
+      sendMessage(streamID, data);
     }, onDone: () {
       // end stream
       sendStreamEnd(streamID);
@@ -152,6 +153,14 @@ class WSTransportConnection {
       ..endStream = true);
   }
 
+  terminateStream(int streamID) {
+    if (_openStreams.containsKey(streamID)) {
+      var stream = _openStreams[streamID];
+      stream.incomingMessagesSink.close();
+      _openStreams.remove(streamID);
+    }
+  }
+
   // for server
   sendHeaders(int streamID, String path, [String status]) {
     this.send(new DataFrame()
@@ -174,10 +183,11 @@ class WSTransportConnection {
       ..endStream = true);
   }
 
+  // can used by connection to ensure transport is ready
   bool get isOpen {
     // close stale connection
     // print("ws.isOpen: ${_ws.readyState}, ${lastSeenTime}");
-    if (DateTime.now().difference(lastSeenTime) > Duration(seconds: 10)) {
+    if (DateTime.now().difference(lastSeenTime) > Duration(seconds: 20)) {
       _ws.close();
       return false;
     }
@@ -185,13 +195,11 @@ class WSTransportConnection {
   }
 
   Future finish() {
-    //TODO: handle openingStream
     print("wsgrpc.transport.finish");
     return _ws.close();
   }
 
   Future terminate() {
-    //TODO: handle openingStream
     print("wsgrpc.transport.terminate");
     return _ws.close();
   }

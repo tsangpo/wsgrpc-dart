@@ -1,10 +1,11 @@
 ///
 //  Generated code. Do not modify.
 //  source: wsgrpc.proto
-///
-// ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name
+//
+// @dart = 2.3
+// ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type
 
-import 'dart:core' as $core show bool, Deprecated, double, int, List, Map, override, String;
+import 'dart:core' as $core show bool, Deprecated, double, int, List, Map, override, pragma, String;
 
 import 'package:protobuf/protobuf.dart' as $pb;
 
@@ -21,13 +22,15 @@ class DataFrame_Headers extends $pb.GeneratedMessage {
     ..hasRequiredFields = false
   ;
 
-  DataFrame_Headers() : super();
-  DataFrame_Headers.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
-  DataFrame_Headers.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  DataFrame_Headers._() : super();
+  factory DataFrame_Headers() => create();
+  factory DataFrame_Headers.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory DataFrame_Headers.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   DataFrame_Headers clone() => DataFrame_Headers()..mergeFromMessage(this);
   DataFrame_Headers copyWith(void Function(DataFrame_Headers) updates) => super.copyWith((message) => updates(message as DataFrame_Headers));
   $pb.BuilderInfo get info_ => _i;
-  static DataFrame_Headers create() => DataFrame_Headers();
+  @$core.pragma('dart2js:noInline')
+  static DataFrame_Headers create() => DataFrame_Headers._();
   DataFrame_Headers createEmptyInstance() => create();
   static $pb.PbList<DataFrame_Headers> createRepeated() => $pb.PbList<DataFrame_Headers>();
   static DataFrame_Headers getDefault() => _defaultInstance ??= create()..freeze();
@@ -63,13 +66,15 @@ class DataFrame_Trailers extends $pb.GeneratedMessage {
     ..hasRequiredFields = false
   ;
 
-  DataFrame_Trailers() : super();
-  DataFrame_Trailers.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
-  DataFrame_Trailers.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  DataFrame_Trailers._() : super();
+  factory DataFrame_Trailers() => create();
+  factory DataFrame_Trailers.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory DataFrame_Trailers.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   DataFrame_Trailers clone() => DataFrame_Trailers()..mergeFromMessage(this);
   DataFrame_Trailers copyWith(void Function(DataFrame_Trailers) updates) => super.copyWith((message) => updates(message as DataFrame_Trailers));
   $pb.BuilderInfo get info_ => _i;
-  static DataFrame_Trailers create() => DataFrame_Trailers();
+  @$core.pragma('dart2js:noInline')
+  static DataFrame_Trailers create() => DataFrame_Trailers._();
   DataFrame_Trailers createEmptyInstance() => create();
   static $pb.PbList<DataFrame_Trailers> createRepeated() => $pb.PbList<DataFrame_Trailers>();
   static DataFrame_Trailers getDefault() => _defaultInstance ??= create()..freeze();
@@ -107,13 +112,15 @@ class DataFrame extends $pb.GeneratedMessage {
     ..hasRequiredFields = false
   ;
 
-  DataFrame() : super();
-  DataFrame.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
-  DataFrame.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  DataFrame._() : super();
+  factory DataFrame() => create();
+  factory DataFrame.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory DataFrame.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   DataFrame clone() => DataFrame()..mergeFromMessage(this);
   DataFrame copyWith(void Function(DataFrame) updates) => super.copyWith((message) => updates(message as DataFrame));
   $pb.BuilderInfo get info_ => _i;
-  static DataFrame create() => DataFrame();
+  @$core.pragma('dart2js:noInline')
+  static DataFrame create() => DataFrame._();
   DataFrame createEmptyInstance() => create();
   static $pb.PbList<DataFrame> createRepeated() => $pb.PbList<DataFrame>();
   static DataFrame getDefault() => _defaultInstance ??= create()..freeze();
@@ -156,13 +163,15 @@ class Endponit extends $pb.GeneratedMessage {
     ..hasRequiredFields = false
   ;
 
-  Endponit() : super();
-  Endponit.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromBuffer(i, r);
-  Endponit.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) : super.fromJson(i, r);
+  Endponit._() : super();
+  factory Endponit() => create();
+  factory Endponit.fromBuffer($core.List<$core.int> i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromBuffer(i, r);
+  factory Endponit.fromJson($core.String i, [$pb.ExtensionRegistry r = $pb.ExtensionRegistry.EMPTY]) => create()..mergeFromJson(i, r);
   Endponit clone() => Endponit()..mergeFromMessage(this);
   Endponit copyWith(void Function(Endponit) updates) => super.copyWith((message) => updates(message as Endponit));
   $pb.BuilderInfo get info_ => _i;
-  static Endponit create() => Endponit();
+  @$core.pragma('dart2js:noInline')
+  static Endponit create() => Endponit._();
   Endponit createEmptyInstance() => create();
   static $pb.PbList<Endponit> createRepeated() => $pb.PbList<Endponit>();
   static Endponit getDefault() => _defaultInstance ??= create()..freeze();

@@ -1,3 +1,1 @@
-library wsgrpc;
-
-export 'src/channel.dart';
+export 'src/client/ws_channel.dart' show ClientChannel;
