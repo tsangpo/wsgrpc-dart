@@ -60,9 +60,9 @@ class WebsocketTransport {
     if (frame.endStream) {
       stream.incomingMessagesSink.close();
       _openStreams.remove(streamID);
-    }
-    if (onActiveStateChanged != null) {
-      onActiveStateChanged(_openStreams.length > 0);
+      if (_openStreams.length == 0 && onActiveStateChanged != null) {
+        onActiveStateChanged(false);
+      }
     }
   }
 
@@ -116,6 +116,10 @@ class WebsocketTransport {
       terminateStream(streamID);
     });
     this._openStreams[streamID] = stream;
+
+    if (this.onActiveStateChanged != null) {
+      this.onActiveStateChanged(true);
+    }
 
     stream.outgoingMessagesStream.handleError(onRequestFailure).listen((data) {
       // send data
