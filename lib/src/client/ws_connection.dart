@@ -9,8 +9,6 @@ import 'ws_transport.dart';
 class WebsocketClientConnection implements connection.ClientConnection {
   final ChannelOptions options;
 
-  String get authority => options.credentials.authority ?? Uri.parse(url).host;
-
   connection.ConnectionState _state = ConnectionState.idle;
 
   final _pendingCalls = <ClientCall>[];
@@ -19,6 +17,10 @@ class WebsocketClientConnection implements connection.ClientConnection {
 
   /// Used for idle and reconnect timeout, depending on [_state].
   Timer _timer;
+
+  /// Used for making sure a single connection is not kept alive too long.
+  final Stopwatch _connectionLifeTimer = Stopwatch();
+
   Duration _currentReconnectDelay;
 
   final String url;
@@ -26,6 +28,10 @@ class WebsocketClientConnection implements connection.ClientConnection {
   WebsocketClientConnection(this.url, this.options);
 
   ChannelCredentials get credentials => options.credentials;
+
+  String get authority => options.credentials.authority ?? Uri.parse(url).host;
+
+  String get scheme => options.credentials.isSecure ? 'wsss' : 'ws';
 
   ConnectionState get state => _state;
 
@@ -42,15 +48,37 @@ class WebsocketClientConnection implements connection.ClientConnection {
     connectTransport().then((transport) {
       _currentReconnectDelay = null;
       _transportConnection = transport;
-      transport.onDone = _handleSocketClosed;
+      transport.onDone = _abandonConnection;
       transport.onActiveStateChanged = _handleActiveStateChanged;
+      _connectionLifeTimer
+        ..reset()
+        ..start();
       _setState(ConnectionState.ready);
       _pendingCalls.forEach(_startCall);
       _pendingCalls.clear();
     }).catchError(_handleConnectionFailure);
   }
 
+  /// Abandons the current connection if it is unhealthy or has been open for
+  /// too long.
+  ///
+  /// Assumes [_transportConnection] is not `null`.
+  void _refreshConnectionIfUnhealthy() {
+    final bool isHealthy = _transportConnection.isOpen;
+    final bool shouldRefresh =
+        _connectionLifeTimer.elapsed > options.connectionTimeout;
+    if (shouldRefresh) {
+      _transportConnection.finish();
+    }
+    if (!isHealthy || shouldRefresh) {
+      _abandonConnection();
+    }
+  }
+
   void dispatchCall(ClientCall call) {
+    if (_transportConnection != null) {
+      _refreshConnectionIfUnhealthy();
+    }
     switch (_state) {
       case ConnectionState.ready:
         _startCall(call);
@@ -156,7 +184,7 @@ class WebsocketClientConnection implements connection.ClientConnection {
     _connect();
   }
 
-  void _handleSocketClosed() {
+  void _abandonConnection() {
     _cancelTimer();
     _transportConnection = null;
 
