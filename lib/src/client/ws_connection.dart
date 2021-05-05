@@ -95,7 +95,7 @@ class WebsocketClientConnection implements connection.ClientConnection {
   }
 
   GrpcTransportStream makeRequest(String path, Duration timeout,
-      Map<String, String> metadata, ErrorHandler onRequestFailure) {
+      Map<String, String> metadata, ErrorHandler onRequestFailure, {CallOptions callOptions}) {
     return _transportConnection.makeRequest(path, onRequestFailure);
   }
 
