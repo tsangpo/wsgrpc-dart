@@ -2,9 +2,13 @@
 //  Generated code. Do not modify.
 //  source: wsgrpc.proto
 //
-// @dart = 2.3
-// ignore_for_file: camel_case_types,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type
+// @dart = 2.12
+// ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields,deprecated_member_use_from_same_package
 
+import 'dart:core' as $core;
+import 'dart:convert' as $convert;
+import 'dart:typed_data' as $typed_data;
+@$core.Deprecated('Use dataFrameDescriptor instead')
 const DataFrame$json = const {
   '1': 'DataFrame',
   '2': const [
@@ -19,6 +23,7 @@ const DataFrame$json = const {
   '4': const [DataFrame_Types$json],
 };
 
+@$core.Deprecated('Use dataFrameDescriptor instead')
 const DataFrame_Headers$json = const {
   '1': 'Headers',
   '2': const [
@@ -29,6 +34,7 @@ const DataFrame_Headers$json = const {
   ],
 };
 
+@$core.Deprecated('Use dataFrameDescriptor instead')
 const DataFrame_Trailers$json = const {
   '1': 'Trailers',
   '2': const [
@@ -39,6 +45,7 @@ const DataFrame_Trailers$json = const {
   ],
 };
 
+@$core.Deprecated('Use dataFrameDescriptor instead')
 const DataFrame_Types$json = const {
   '1': 'Types',
   '2': const [
@@ -49,6 +56,9 @@ const DataFrame_Types$json = const {
   ],
 };
 
+/// Descriptor for `DataFrame`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List dataFrameDescriptor = $convert.base64Decode('CglEYXRhRnJhbWUSGwoJc3RyZWFtX2lkGAEgASgFUghzdHJlYW1JZBIdCgplbmRfc3RyZWFtGAIgASgIUgllbmRTdHJlYW0SKwoEdHlwZRgDIAEoDjIXLndzZ3JwYy5EYXRhRnJhbWUuVHlwZXNSBHR5cGUSMwoHaGVhZGVycxgEIAEoCzIZLndzZ3JwYy5EYXRhRnJhbWUuSGVhZGVyc1IHaGVhZGVycxI2Cgh0cmFpbGVycxgFIAEoCzIaLndzZ3JwYy5EYXRhRnJhbWUuVHJhaWxlcnNSCHRyYWlsZXJzEhgKB21lc3NhZ2UYBiABKAxSB21lc3NhZ2UadQoHSGVhZGVycxISCgRwYXRoGAEgASgJUgRwYXRoEhYKBnN0YXR1cxgCIAEoCVIGc3RhdHVzEh0KCnJwY19zdGF0dXMYAyABKAlSCXJwY1N0YXR1cxIfCgtycGNfbWVzc2FnZRgEIAEoCVIKcnBjTWVzc2FnZRp2CghUcmFpbGVycxISCgRwYXRoGAEgASgJUgRwYXRoEhYKBnN0YXR1cxgCIAEoCVIGc3RhdHVzEh0KCnJwY19zdGF0dXMYAyABKAlSCXJwY1N0YXR1cxIfCgtycGNfbWVzc2FnZRgEIAEoCVIKcnBjTWVzc2FnZSI5CgVUeXBlcxIICgROT09QEAASCwoHSEVBREVSUxABEgwKCFRSQUlMRVJTEAISCwoHTUVTU0FHRRAD');
+@$core.Deprecated('Use endponitDescriptor instead')
 const Endponit$json = const {
   '1': 'Endponit',
   '2': const [
@@ -56,3 +66,5 @@ const Endponit$json = const {
   ],
 };
 
+/// Descriptor for `Endponit`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List endponitDescriptor = $convert.base64Decode('CghFbmRwb25pdBIQCgN1cmwYASABKAlSA3VybA==');
