@@ -21,36 +21,38 @@ class WsConnection implements ClientConnection {
         onDone: _onClose, onError: _onError, cancelOnError: true);
   }
 
-  _onData(dynamic data) {
+  void _onData(dynamic data) {
+    print('ondata: $data');
     var frame = DataFrame.fromBuffer(data);
+    print('ondata frame: $frame');
     streams[frame.callID]?.onDataFrame(frame);
   }
 
-  _onClose() {
+  void _onClose() {
     streams.values.toList().forEach((stream) {
       stream.onClose();
     });
     streams.clear();
   }
 
-  _onError(dynamic error) {
+  void _onError(dynamic error) {
     //
   }
 
-  _nextCallID() {
-    var callID = this._callID;
-    this._callID += 2;
+  int _nextCallID() {
+    var callID = _callID;
+    _callID += 2;
     return callID;
   }
 
-  _sendDataFrame(DataFrame frame) {
-    if (this.ws.readyState != WebSocket.open) {
-      throw ("connection is closed");
+  void _sendDataFrame(DataFrame frame) {
+    if (ws.readyState != WebSocket.open) {
+      throw ('connection is closed');
     }
     //console.debug("[Protocol] -> ", frame);
     var data = frame.writeToBuffer();
     //console.log("[Protocol] send.data:", data);
-    this.ws.add(data);
+    ws.add(data);
   }
 
   static Future<WsConnection> connect(String endpoint,
@@ -75,17 +77,22 @@ class WsConnection implements ClientConnection {
   GrpcTransportStream makeRequest(String path, Duration? timeout,
       Map<String, String> metadata, ErrorHandler onRequestFailure,
       {required CallOptions callOptions}) {
-    var callID = this._nextCallID();
+    var callID = _nextCallID();
 
     var sm = path.substring(1).split('/');
     var service = sm[0];
     var method = sm[1];
-    _sendDataFrame(DataFrame(
-        callID: callID,
-        header: DataFrame_Header(service: service, method: method)));
+    var firstFrame = true;
 
-    var stream = new WsStream(
+    var stream = WsStream(
         onOutgoingMessageData: (data) {
+          if (firstFrame) {
+            _sendDataFrame(DataFrame(
+                callID: callID,
+                header: DataFrame_Header(service: service, method: method),
+                body: data));
+            firstFrame = false;
+          }
           _sendDataFrame(DataFrame(callID: callID, body: data));
         },
         onOutgoingMessageError: (dynamic error) {
@@ -102,12 +109,12 @@ class WsConnection implements ClientConnection {
         },
         onRequestFailure: onRequestFailure,
         onIncomingMessageDone: () {
-          this.streams.remove(callID);
+          streams.remove(callID);
         },
         onTerminate: () {
-          this.streams.remove(callID);
+          streams.remove(callID);
         });
-    this.streams[callID] = stream;
+    streams[callID] = stream;
 
     return stream;
   }

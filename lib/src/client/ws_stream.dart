@@ -38,12 +38,12 @@ class WsStream extends GrpcTransportStream {
   }
 
   // when websocket closed, called by connection
-  onClose() {
+  void onClose() {
     _incomingMessages.sink.close();
   }
 
   // when received data frame, called by connection
-  onDataFrame(DataFrame frame) {
+  void onDataFrame(DataFrame frame) {
     if (frame.hasHeader()) {
       // v2 client channel won't get header
     }

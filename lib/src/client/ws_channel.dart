@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:grpc/service_api.dart';
 import 'package:grpc/grpc_connection_interface.dart' show ClientCall;
 
-import 'utils.dart';
+import '../utils.dart';
 import 'ws_connection.dart';
 
 class WsChannel implements ClientChannel {
@@ -14,13 +14,13 @@ class WsChannel implements ClientChannel {
 
   @override
   Future<void> shutdown() async {
-    _connectionResult?.result?.shutdown();
+    await _connectionResult?.result?.shutdown();
     _connectionResult = null;
   }
 
   @override
   Future<void> terminate() async {
-    _connectionResult?.result?.terminate();
+    await _connectionResult?.result?.terminate();
     _connectionResult = null;
   }
 
@@ -51,15 +51,13 @@ class WsChannel implements ClientChannel {
       }
     }
 
-    if (_connectionResult == null) {
-      _connectionResult = FutureResult(WsConnection.connect(endpoint));
-    }
+    _connectionResult ??= FutureResult(WsConnection.connect(endpoint));
 
     return await _connectionResult!.future;
   }
 
-  reset(String? endpoint) {
-    terminate();
+  Future<void> reset(String? endpoint) async {
+    await terminate();
     if (endpoint != null) {
       this.endpoint = endpoint;
     }
