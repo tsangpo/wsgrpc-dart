@@ -1,79 +1,67 @@
 import 'dart:async';
 
-import 'package:grpc/grpc.dart';
-import 'package:grpc/src/client/channel.dart';
-import 'package:grpc/src/client/connection.dart';
+import 'package:grpc/service_api.dart';
+import 'package:grpc/grpc_connection_interface.dart' show ClientCall;
 
+import 'utils.dart';
 import 'ws_connection.dart';
 
-/// A channel to a virtual gRPC endpoint.
-///
-/// For each RPC, the channel picks a [Http2ClientConnection] to dispatch the call.
-/// RPCs on the same channel may be sent to different connections, depending on
-/// load balancing settings.
-class ClientChannel extends ClientChannelBase {
-  String url;
-  StreamController<String> _callEvents = new StreamController();
-  StreamController<dynamic> _callErrors = new StreamController();
-  Stream<String> get callEvents => _callEvents.stream;
-  Stream<dynamic> get callErrors => _callErrors.stream;
+class WsChannel implements ClientChannel {
+  String endpoint;
+  FutureResult<WsConnection>? _connectionResult;
 
-  final ChannelOptions options;
-  ClientConnection _connection;
-
-  ClientChannel(this.url, {this.options = const ChannelOptions()}) : super();
-
-  bool _isShutdown = false;
+  WsChannel(this.endpoint);
 
   @override
   Future<void> shutdown() async {
-    if (_isShutdown) return;
-    _isShutdown = true;
-    if (_connection != null) await _connection.shutdown();
+    _connectionResult?.result?.shutdown();
+    _connectionResult = null;
   }
 
   @override
   Future<void> terminate() async {
-    _isShutdown = true;
-    if (_connection != null) await _connection.terminate();
-  }
-
-  /// Returns a connection to this [Channel]'s RPC endpoint.
-  ///
-  /// The connection may be shared between multiple RPCs.
-  Future<ClientConnection> getConnection() async {
-    if (_isShutdown) throw GrpcError.unavailable('Channel shutting down.');
-    return _connection ??= createConnection();
+    _connectionResult?.result?.terminate();
+    _connectionResult = null;
   }
 
   @override
   ClientCall<Q, R> createCall<Q, R>(
       ClientMethod<Q, R> method, Stream<Q> requests, CallOptions options) {
     final call = ClientCall(method, requests, options);
-
     getConnection().then((connection) {
       if (call.isCancelled) return;
       connection.dispatchCall(call);
-      _callEvents.add(method.path);
-    }, onError: (err) {
-      call.onConnectionError(err);
-      _callErrors.add(err);
-    });
-
+    }, onError: call.onConnectionError);
     return call;
   }
 
-  ClientConnection createConnection() {
-    return WebsocketClientConnection(url, options);
+  Future<WsConnection> getConnection() async {
+    if (_connectionResult != null) {
+      if (_connectionResult!.resolved) {
+        var con = _connectionResult!.result;
+        if (con == null) {
+          // error
+          _connectionResult = null;
+        } else if (!con.isOpen) {
+          // closed
+          _connectionResult = null;
+        } else {
+          return con;
+        }
+      }
+    }
+
+    if (_connectionResult == null) {
+      _connectionResult = FutureResult(WsConnection.connect(endpoint));
+    }
+
+    return await _connectionResult!.future;
   }
 
-  // http2没有的扩展函数
-
-  reset([String url]) {
-    if (url != null) {
-      this.url = url;
+  reset(String? endpoint) {
+    terminate();
+    if (endpoint != null) {
+      this.endpoint = endpoint;
     }
-    _connection?.terminate();
-    _connection = null;
   }
 }

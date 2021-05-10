@@ -1,0 +1,55 @@
+
+syntax = "proto3";
+
+package data;
+
+/**
+四种调用数据包序列
+
+Unary -> Unary
+{header, body} -> {body|trailer}
+(Req): Promise<Res>
+关闭 callid 监听：收到消息
+
+Unary -> Stream
+{header, body} -> {body} ... {trailer}
+(Req): Promise<AsyncIterator<Res>>
+关闭 callid 监听：res 的 stream 结束
+
+Stream -> Unary
+{header} {body} ... {trailer} -> {body|trailer}
+(Stream<Req>): Promise<Res>
+关闭 callid 监听：req 的 stream 结束 并且 res 已结束
+
+Stream -> Stream
+{header} {body} ... {trailer} -> {body} ... {trailer}
+(Stream<Req>): Promise<AsyncIterator<Res>>
+关闭 callid 监听：req 和 res 的 stream 结束
+ */
+
+message DataFrame {
+  // request
+  message Header {
+    string service = 1;
+    string method = 2;
+  }
+  // stream end or error message
+  message Trailer {
+    enum Status {
+      UNKNOWN = 0;
+      OK = 1;
+      ERROR = 2;
+      ABORT = 3;
+    }
+    Status status = 1;
+    string message = 2;
+  }
+
+  int32 callID = 1;
+
+  reserved 2 to 6; // used in v1
+
+  Header header = 7;
+  Trailer trailer = 8;
+  bytes body = 9;
+}

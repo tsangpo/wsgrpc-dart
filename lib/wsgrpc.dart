@@ -1,1 +1,1 @@
-export 'src/client/ws_channel.dart' show ClientChannel;
+export 'src/client/ws_channel.dart' show WsChannel;

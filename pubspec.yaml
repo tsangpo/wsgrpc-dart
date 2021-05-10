@@ -1,11 +1,11 @@
 name: wsgrpc
-description: A new flutter package project.
-version: 0.0.3
-author: tsangpo <tsangpozheng@gmail.com>
-homepage: https://github.com/tsangpo
+description: A dart client for wsgrpc
+version: 2.0.0
+author: tsangpo
+homepage: https://github.com/tsangpo/wsgrpc-dart
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   http2: ^2.0.0
@@ -13,4 +13,5 @@ dependencies:
   protobuf: ^2.0.0
 
 dev_dependencies:
-  test: ^1.5.1
+  pedantic: ^1.9.0
+  test: ^1.14.4
