@@ -9,6 +9,8 @@ import 'ws_connection.dart';
 class WsChannel implements ClientChannel {
   String endpoint;
   FutureResult<WsConnection>? _connectionResult;
+  final StreamController<String> _callEvents = StreamController<String>();
+  Stream<String> get callEvents => _callEvents.stream;
 
   WsChannel(this.endpoint);
 
@@ -27,6 +29,7 @@ class WsChannel implements ClientChannel {
   @override
   ClientCall<Q, R> createCall<Q, R>(
       ClientMethod<Q, R> method, Stream<Q> requests, CallOptions options) {
+    _callEvents.add(method.path);
     final call = ClientCall(method, requests, options);
     getConnection().then((connection) {
       if (call.isCancelled) return;
@@ -56,7 +59,7 @@ class WsChannel implements ClientChannel {
     return await _connectionResult!.future;
   }
 
-  Future<void> reset(String? endpoint) async {
+  Future<void> reset([String? endpoint]) async {
     await terminate();
     if (endpoint != null) {
       this.endpoint = endpoint;

@@ -1,3 +1,7 @@
+## [2.0.1] - 2021-05-11
+
+- add 'callEvents' stream to channel.
+
 ## [2.0.0] - 2021-05-10
 
 - v2 protocal
