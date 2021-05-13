@@ -47,9 +47,9 @@ class WsStream extends GrpcTransportStream {
     if (frame.hasHeader()) {
       // v2 client channel won't get header
     }
-    if (frame.hasBody()) {
+    if (frame.body != null) {
       if (firstBody) {
-        _incomingMessages.sink.add(GrpcMetadata({":status": '200'}));
+        _incomingMessages.sink.add(GrpcMetadata({':status': '200'}));
         firstBody = false;
       }
       _incomingMessages.sink.add(GrpcData(frame.body, isCompressed: false));

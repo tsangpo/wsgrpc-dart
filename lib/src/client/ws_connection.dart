@@ -12,7 +12,7 @@ class WsConnection implements ClientConnection {
   final String authority;
   @override
   final String scheme;
-  Map<int, WsStream> streams = Map();
+  Map<int, WsStream> streams = {};
   int _callID = 1;
 
   WsConnection(this.ws, this.authority, this.scheme) {
@@ -22,9 +22,9 @@ class WsConnection implements ClientConnection {
   }
 
   void _onData(dynamic data) {
-    print('ondata: $data');
+    // print('ondata: $data');
     var frame = DataFrame.fromBuffer(data);
-    print('ondata frame: $frame');
+    // print('ondata frame: $frame');
     streams[frame.callID]?.onDataFrame(frame);
   }
 
@@ -57,6 +57,7 @@ class WsConnection implements ClientConnection {
 
   static Future<WsConnection> connect(String endpoint,
       [Map<String, dynamic>? headers]) async {
+    // print('create ws connection: $endpoint');
     var ws = await WebSocket.connect(endpoint, headers: headers);
     var uri = Uri.parse(endpoint);
     return WsConnection(ws, uri.host, uri.scheme);
@@ -92,8 +93,9 @@ class WsConnection implements ClientConnection {
                 header: DataFrame_Header(service: service, method: method),
                 body: data));
             firstFrame = false;
+          } else {
+            _sendDataFrame(DataFrame(callID: callID, body: data));
           }
-          _sendDataFrame(DataFrame(callID: callID, body: data));
         },
         onOutgoingMessageError: (dynamic error) {
           _sendDataFrame(DataFrame(

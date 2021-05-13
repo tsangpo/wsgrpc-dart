@@ -22,8 +22,9 @@ class WsChannel implements ClientChannel {
 
   @override
   Future<void> terminate() async {
-    await _connectionResult?.result?.terminate();
+    var _cr = _connectionResult;
     _connectionResult = null;
+    await _cr?.result?.terminate();
   }
 
   @override
@@ -56,11 +57,11 @@ class WsChannel implements ClientChannel {
 
     _connectionResult ??= FutureResult(WsConnection.connect(endpoint));
 
-    return await _connectionResult!.future;
+    return _connectionResult!.future;
   }
 
-  Future<void> reset([String? endpoint]) async {
-    await terminate();
+  void reset([String? endpoint]) {
+    terminate();
     if (endpoint != null) {
       this.endpoint = endpoint;
     }

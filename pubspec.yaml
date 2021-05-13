@@ -1,6 +1,6 @@
 name: wsgrpc
-description: A dart client for wsgrpc
-version: 2.0.1
+description: A dart client for wsgrpc. Using Websocket as transport of grpc will make client stream and server stream call available for browser scripts.
+version: 2.0.3
 homepage: https://github.com/tsangpo/wsgrpc-dart
 
 environment:

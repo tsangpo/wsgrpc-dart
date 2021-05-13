@@ -10,21 +10,35 @@ import 'dart:core' as $core;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class DataFrame_Trailer_Status extends $pb.ProtobufEnum {
-  static const DataFrame_Trailer_Status UNKNOWN = DataFrame_Trailer_Status._(0, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'UNKNOWN');
-  static const DataFrame_Trailer_Status OK = DataFrame_Trailer_Status._(1, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'OK');
-  static const DataFrame_Trailer_Status ERROR = DataFrame_Trailer_Status._(2, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ERROR');
-  static const DataFrame_Trailer_Status ABORT = DataFrame_Trailer_Status._(3, const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'ABORT');
+  static const DataFrame_Trailer_Status OK = DataFrame_Trailer_Status._(0,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names') ? '' : 'OK');
+  static const DataFrame_Trailer_Status ERROR = DataFrame_Trailer_Status._(
+      1,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'ERROR');
+  static const DataFrame_Trailer_Status ABORT = DataFrame_Trailer_Status._(
+      2,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'ABORT');
+  static const DataFrame_Trailer_Status UNKNOWN = DataFrame_Trailer_Status._(
+      3,
+      const $core.bool.fromEnvironment('protobuf.omit_enum_names')
+          ? ''
+          : 'UNKNOWN');
 
-  static const $core.List<DataFrame_Trailer_Status> values = <DataFrame_Trailer_Status> [
-    UNKNOWN,
+  static const $core.List<DataFrame_Trailer_Status> values =
+      <DataFrame_Trailer_Status>[
     OK,
     ERROR,
     ABORT,
+    UNKNOWN,
   ];
 
-  static final $core.Map<$core.int, DataFrame_Trailer_Status> _byValue = $pb.ProtobufEnum.initByValue(values);
+  static final $core.Map<$core.int, DataFrame_Trailer_Status> _byValue =
+      $pb.ProtobufEnum.initByValue(values);
   static DataFrame_Trailer_Status? valueOf($core.int value) => _byValue[value];
 
   const DataFrame_Trailer_Status._($core.int v, $core.String n) : super(v, n);
 }
-
